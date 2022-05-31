@@ -1,0 +1,3 @@
+[submodule "asm6809"]
+	path = asm6809
+	url = git@github.com:mwenge/asm6809.git
