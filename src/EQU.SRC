@@ -47,11 +47,11 @@ PIA0    EQU   $C80C            ;A. SIDE OF THE COIN DOOR PIA
 *B6     SLAM
 *B7     SOUND HANDSHAKE
 *CA2    LED3 
-*CA1    IRQ 240 (16 MS)  (LINE 240)
+*CA1    IRQ   240              ;(16 MS)  (LINE 240)
 PIA1    EQU   $C80E            ;B. SIDE OF THE COIN DOOR PIA
 *B0-B5  SOUND
-*B6-B7  LED 0,1
-*CB1    IRQ 4 MS (0,$40,$80,$C0)
+*B6-B7  LED   0,1
+*CB1    IRQ   4                ;MS (0,$40,$80,$C0)
 *CB2    LED2            
 PIA2    EQU   $C804            ;A. SIDE OF THE WIDGET (STARGATE STYLE WIDGET)
 *B0     PLAYER 1 MOVE LEFT
