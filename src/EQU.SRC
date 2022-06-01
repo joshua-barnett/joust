@@ -3,7 +3,21 @@
 ***********************************BUT ONLY THESE!!!!!************************
 *
 * CHECK TO SEE IF DEBUGGING DEBUG<>0 IS ROM VERSION
-        IFN DEBUG
+*
+* Part of the debugging package?
+*
+* IFN = Ignore File Number
+*
+* http://www.bitsavers.org/pdf/motorola/VME/68KBUGD1_Debugging_Package_for_68K_CPUs_Part_1_Jun97.pdf
+* http://www.bitsavers.org/pdf/motorola/VME/68KBUGD2_Debugging_Package_for_68K_CPUs_Part_2_Jun97.pdf
+*
+* Commenting out lines to simulate DEBUG being set.
+* Changing IFN to IF.
+*
+* Appears to be a pseduo-op?
+* https://www.pagetable.com/docs/cbmasm/cy6502.txt
+*
+        IF    DEBUG
 TSTORG  EQU   $D000            ;YOUR TEMPORARY AREA FOR THE $F000 TEST ROM (4K BLOCK)
         ELSE
 TSTORG  EQU   $F000            ;THE ROM AREA FOR THE $F000 TEST ROM (4K BLOCK)
@@ -71,18 +85,18 @@ PIA3    EQU   $C806            ;B. SIDE OF THE WIDGET
 *
 * 'ENTER' - ENTER CHARACTERS....ALL OFFSETS ARE FROM REG Y.
 * INDEXING OFFSET EQUATES
-.NUMLET EQU   0                ;NUMBER OF LETTERS TO GET
-.CURLET EQU   1                ;CURRENT LETTER POINTER INTO BUFFER
-.STCHR  EQU   2                ;THE FIRST CHARACTER OF THE CHARACTER SET
-.NDCHR  EQU   3                ;THE LAST CHARACTER OF THE CHARACTER SET
-.SIDE   EQU   4                ;THE CONTROL BYTE FOR THE WIDGET (UP=$3C , CT=$34)
-.COLOR  EQU   5                ;THE COLOR TO WRITE THE SCREEN ECHO IN
-.WAKUP  EQU   6                ;THE WAKE UP ADDRESS OF THE SLEEP (BECAUSE OF DUAL USE)
-.XSAVE  EQU   8                ;THE STARTING POSITION OF THE LINE TO BE INPUTED
-.CURPOS EQU   10               ;THE CURRENT CALCULATED CURSOR POSITION
-.RETURN EQU   12               ;RETURN ADDRESS
-.DEBONC EQU   14               ;THE CURRENT DEBOUNCE TIME ON THE ENTER SWITCH
-.CARAC  EQU   15               ;THE START OF THE CHARACTER BUFFER
+NUMLET  EQU   0                ;NUMBER OF LETTERS TO GET
+CURLET  EQU   1                ;CURRENT LETTER POINTER INTO BUFFER
+STCHR   EQU   2                ;THE FIRST CHARACTER OF THE CHARACTER SET
+NDCHR   EQU   3                ;THE LAST CHARACTER OF THE CHARACTER SET
+SIDE    EQU   4                ;THE CONTROL BYTE FOR THE WIDGET (UP=$3C , CT=$34)
+COLOR   EQU   5                ;THE COLOR TO WRITE THE SCREEN ECHO IN
+WAKUP   EQU   6                ;THE WAKE UP ADDRESS OF THE SLEEP (BECAUSE OF DUAL USE)
+XSAVE2  EQU   8                ;THE STARTING POSITION OF THE LINE TO BE INPUTED
+CURPOS  EQU   10               ;THE CURRENT CALCULATED CURSOR POSITION
+RETURN  EQU   12               ;RETURN ADDRESS
+DEBONC  EQU   14               ;THE CURRENT DEBOUNCE TIME ON THE ENTER SWITCH
+CARAC   EQU   15               ;THE START OF THE CHARACTER BUFFER
 
 *
 * CMOS RAM ALLOCATION
