@@ -19,3 +19,15 @@ RUN ./autogen.sh
 RUN ./configure
 RUN make
 RUN ln -s /usr/src/asm6809/src/asm6809 /usr/bin/asm6809
+
+WORKDIR /usr/src
+
+COPY vasm-mirror vasm-mirror
+
+WORKDIR /usr/src/vasm-mirror
+
+RUN make CPU=6800 SYNTAX=oldstyle
+RUN ln -s /usr/src/vasm-mirror/vasm6800_oldstyle /usr/bin/vasm6800_oldstyle
+
+RUN make CPU=6809 SYNTAX=oldstyle
+RUN ln -s /usr/src/vasm-mirror/vasm6809_oldstyle /usr/bin/vasm6809_oldstyle
