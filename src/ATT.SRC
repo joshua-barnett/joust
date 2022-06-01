@@ -2,11 +2,11 @@
 * LINE DRAWING SUBROUTINE
 * Kenneth F. Lantz c@ March 1982 William Electronics
 *
-        NLIST
+*       NLIST
         INCLUDE "src/RAMDEF.SRC"
         INCLUDE "src/EQU.SRC"
         INCLUDE "src/MESSEQU.SRC"
-        LIST
+*       LIST
 *
 *        COLOR PROCESSES WORK SPACE
 *
