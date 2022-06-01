@@ -63,7 +63,7 @@ MARQUE  PKILL $00,$08          ;KILL H.S.T.D. PROCESSES
         LDX   #REPLAY
         JSR   RCMSA
         TSTA                   ;ANY EXTRA MEN ALLOWED?
-        BEQ   20SS             ;BR=NO, SO SKIP THIS MESSAGE
+        BEQ   20F              ;BR=NO, SO SKIP THIS MESSAGE
         LDD   #MSW17*256+$33   ;EXTRA MAN AT XX,000 POINTS
         LDX   #$1FAB
         JSR   OUTPHR
@@ -73,12 +73,12 @@ MARQUE  PKILL $00,$08          ;KILL H.S.T.D. PROCESSES
         JSR   RCMSA
         PULS  X
         BITA  #$F0
-        BNE   10SS
+        BNE   10F
         ORA   #$F0
-10SS    JSR   OUTBCD           ;DISPLAY THOUSANDS OF REPLAY POINTS
+10      JSR   OUTBCD           ;DISPLAY THOUSANDS OF REPLAY POINTS
         LDA   #MSW18
         JSR   OUTPHR
-20SS    PCNAP 1                ;DELAYS, DELAYS, WHEN DO WE SHIP IT!
+20      PCNAP 1                ;DELAYS, DELAYS, WHEN DO WE SHIP IT!
         SECCR STRIP,$11        ;STRIPE GENERATOR
         SECCR FLASH,$10        ;COLOR RAM FLASH
 *
@@ -99,7 +99,7 @@ DEMO    CLRA
         STD   YLOC
         CLRA
         LDB   ,U
-        BEQ   1SS
+        BEQ   1F
         ADDD  OFFSET
         STD   ENDPTX
         CLRA
@@ -108,21 +108,21 @@ DEMO    CLRA
         JSR   LINE
         BRA   DEMO
 *
-1SS     LEAU  1,U
+1       LEAU  1,U
         LDB   ,U+              ;a double zero ends a character
-        BEQ   2SS
+        BEQ   2F
         BRA   TOP
-2SS     LDA   ,U+
-        BEQ   9SS              ;another zero ends it all
+2       LDA   ,U+
+        BEQ   9F               ;another zero ends it all
         STA   OFFSET+1
         BRA   TOP
 *
-9SS     LDU   PEXEC
+9       LDU   PEXEC
         LDA   #111             ;111 * 10 = 1,110 = 18.5 SEC
         STA   PRAM,U
-20SS    PCNAP 10
+20      PCNAP 10
         DEC   PRAM,U
-        BNE   20SS
+        BNE   20B
         PKILL $00,$40          ;KILL ALL NON-ATTRACT MODE PROCESSES
         LDY   #RAMCOL+1
         LDD   #$FFFF
@@ -143,36 +143,36 @@ FLASH   LDD   #-1              ;INITILA COLOR CHANGE AFTER STRIPE ROUTINE
         STD   PCOUNT,U
         LDD   #MARCOL+8
         STD   PCOLOR,U
-10SS    PCNAP 2
+10      PCNAP 2
         LDX   RAMCOL+15
         LDD   PCOUNT,U
-        BPL   11SS
+        BPL   11F
         LDY   PLINK,U
         LDA   PID,Y
         CMPA  #$11             ;STRIPE I.D.?
-        BEQ   20SS
+        BEQ   20F
         LDD   #16              ;INITIAL DELAY
-11SS    BEQ   17SS
+11      BEQ   17F
         ADDD  #-1
         STD   PCOUNT,U
-        BNE   20SS
+        BNE   20F
         LDY   PCOLOR,U
         LEAY  8,Y
         CMPY  #MAREND
-        BLO   15SS
+        BLO   15F
         LDY   #MARCOL+8
-15SS    STY   PCOLOR,U
+15      STY   PCOLOR,U
         STY   PYSAVE,U
         LDA   #8
         STA   PDUMP,U
-17SS    LDY   PYSAVE,U         ;IN MIDDLE OF RE-DUMPPING NEW COLOR
+17      LDY   PYSAVE,U         ;IN MIDDLE OF RE-DUMPPING NEW COLOR
         LDX   ,Y+
         STY   PYSAVE,U
         DEC   PDUMP,U
-        BNE   20SS
+        BNE   20F
         LDD   #((((2*60+30)/16)+1)*8)+7 ;CHANGE COLORS EVERY 2 1/2 SECONDS
         STD   PCOUNT,U
-20SS    LDD   RAMCOL+13
+20      LDD   RAMCOL+13
         STD   RAMCOL+14
         LDD   RAMCOL+11
         STD   RAMCOL+12
@@ -181,7 +181,7 @@ FLASH   LDD   #-1              ;INITILA COLOR CHANGE AFTER STRIPE ROUTINE
         TFR   X,D
         LDB   RAMCOL+8
         STD   RAMCOL+8
-        BRA   10SS
+        BRA   10B
 *
 * STRIPE GENERATOR
 *
@@ -191,27 +191,27 @@ STRIP   CLR   PRAM+8,U
         LDX   #$10-1
         LDY   #$10
         LDA   #8
-10SS    LEAX  1,X
+10      LEAX  1,X
         BSR   WRPIXH
         CMPX   #$8F*2+XLENS
-        BLO   10SS
+        BLO   10B
         LEAX  -XLENS,X
         LEAY  YLENS-1,Y
-20SS    LEAY  1,Y
+20      LEAY  1,Y
         BSR   WRPIXV
         CMPY  #$F2
-        BLO   20SS
+        BLO   20B
         LEAY  -YLENS,Y
-30SS    LEAX  -1,X
+30      LEAX  -1,X
         BSR   WRPIXH
         CMPX  #$0033*2
-        BNE   35SS
-35SS    CMPX  #$0
-        BHI   30SS
-40SS    LEAY  -1,Y
+        BNE   35F
+35      CMPX  #$0
+        BHI   30B
+40      LEAY  -1,Y
         BSR   WRPIXV
         CMPY  #$10
-        BHI   40SS
+        BHI   40B
         JMP   VSUCIDE
 *
 WRPIXH  INCA
@@ -221,13 +221,13 @@ WRPIXH  INCA
         STY   PRAM+2,U
         STD   PRAM+4,U
         LDB   #YLENS
-10SS    BSR   WRANIB
+10      BSR   WRANIB
         LEAY  1,Y
         INCA
         ANDA  #$0F
         ORA   #$08
         DECB
-        BNE   10SS
+        BNE   10B
         BRA   WRPRTS
 *
 WRPIXV  INCA
@@ -237,21 +237,21 @@ WRPIXV  INCA
         STY   PRAM+2,U
         STD   PRAM+4,U
         LDB   #XLENS
-10SS    BSR   WRANIB
+10      BSR   WRANIB
         LEAX  1,X
         INCA
         ANDA  #$0F
         ORA   #$08
         DECB
-        BNE   10SS
+        BNE   10B
 WRPRTS  LDD   ,S++
         STD   PRAM+6,U
         DEC   PRAM+8,U
-        BGT   10SS
+        BGT   10F
         LDA   #3
         STA   PRAM+8,U
         PCNAP 1
-10SS    LDD   PRAM+4,U
+10      LDD   PRAM+4,U
         LDY   PRAM+2,U
         LDX   PRAM+0,U
         JMP   [PRAM+6,U]
@@ -268,17 +268,17 @@ WRANIB  PSHS  D,X,Y
         TFR   D,X
         LDA   #$0F
         LDB   ,S
-        BCS   10SS
+        BCS   10F
         ASLB
         ASLB
         ASLB
         ASLB
         LDA   #$F0
-10SS    ANDA  ,X
-        BNE   20SS
+10      ANDA  ,X
+        BNE   20F
         ORB   ,X
         STB   ,X
-20SS    LDA   #$01             ;READ ROM!
+20      LDA   #$01             ;READ ROM!
         STA   DRRUC
         STA   RRUC
         PULS  D,X,Y,PC
@@ -297,42 +297,42 @@ MAREND  EQU   *
 *
 FILLDN  PSHS  X                ;This routine is entered with the current
         LEAX  1,X              ;location in X and color in A
-1SS     LDD   SAVE
+1       LDD   SAVE
         ANDA  CCOLOR+1
         PSHS  A
         LDA   SAVE
         ANDA  ,X
-        BNE   2SS
+        BNE   2F
         ANDB  ,X
         ORB   ,S+
         STB   ,X
         EXG   D,X
         INCB
         EXG   X,D
-        BNE   1SS
+        BNE   1B
         PSHS  A
-2SS     PULS  A,X,PC
+2       PULS  A,X,PC
 *************************
 * pixel movers  one pixel subroutines
 *************************
 LFTRT   LDA   #RLMASK
         BITA  QUAD
-        BNE   1SS              ;go right
+        BNE   1F               ;go right
         LDD   XLOC
         SUBD  #1
-        BRA   2SS
-1SS     LDD   XLOC
+        BRA   2F
+1       LDD   XLOC
         ADDD  #1
-2SS     STD   XLOC
+2       STD   XLOC
         RTS
 UPDN    TST   QUAD
-        BMI   1SS              ;go down
+        BMI   1F               ;go down
         LDD   YLOC
         SUBD  #1
-        BRA   2SS
-1SS     LDD   YLOC
+        BRA   2F
+1       LDD   YLOC
         ADDD  #1
-2SS     STD   YLOC
+2       STD   YLOC
         RTS
 ******************************************
 *  line drawing subroutine
@@ -341,29 +341,29 @@ LINE    CLR   QUAD
         LDD   XLOC
         SUBD  ENDPTX
         ROR   QUAD
-        BPL   1SS
+        BPL   1F
         COMA
         COMB
         ADDD  #1
-1SS     STD   ABSDX
+1       STD   ABSDX
         STD   ERRCNT
         LDD   YLOC
         SUBD  ENDPTY
         ROR   QUAD             ;bit7 set=down  bit6 set=right
-        BMI   2SS
+        BMI   2F
         COMA
         COMB
         ADDD  #1
-2SS     SUBD  #1
+2       SUBD  #1
         STD   ABSDY
         CLR   HCOUNT
         COMA
         COMB
         CLRA
         ADDD  ABSDX
-        BCC   3SS
+        BCC   3F
         INC   HCOUNT
-3SS     STD   COUNT
+3       STD   COUNT
         BRA   STP1
 *  drawing loop follows *
 MOVX    JSR   LFTRT
@@ -380,9 +380,9 @@ COUNTS  STD   ERRCNT
         LDB   YLOC+1
         TFR   D,X
         LDB   #$F0
-        BCC   3SS
+        BCC   3F
         COMB
-3SS     TFR   B,A
+3       TFR   B,A
         COMB
         STD   SAVE
         ANDA  CCOLOR
@@ -394,18 +394,18 @@ COUNTS  STD   ERRCNT
         BHS   RNGERR
         STB   ,X
         TST   FILDWN
-        BPL   6SS
+        BPL   6F
         JSR   FILLDN
-6SS     LDA   #1
+6       LDA   #1
         STA   DRRUC            ;THIS 1ST, BECAUSE INTERUPTS CAN CHANGE THIS
         STA   CONTRL
         LDD   COUNT
         SUBD  #1
-        BNE   1SS
+        BNE   1F
         TST   HCOUNT
         BEQ   DONE
         DEC   HCOUNT
-1SS     STD   COUNT
+1       STD   COUNT
         PULS  CC
         BCS   MOVX
 MOVY    JSR   UPDN
