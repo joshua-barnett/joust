@@ -1,6 +1,6 @@
-        NOGEN
-        NCLIST
-        BLIST
+*       NOGEN
+*       NCLIST
+*       BLIST
 DEBUG   EQU   0                ;=0 IS ROM VERSION, <>0 IS DEBUGGING RAM VERSION
 *
 * SYSTEM MACRO'S
