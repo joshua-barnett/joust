@@ -3,9 +3,9 @@
 *	Kenneth F. Lantz	c@ March 1982	William Electronics
 *
 	NLIST
-	INCLUDE RAMDEF.SRC
-	INCLUDE EQU.SRC
-	INCLUDE MESSEQU.SRC
+	INCLUDE ramdef.src
+	INCLUDE equ.src
+	INCLUDE messequ.src
 	LIST
 *
 *	COLOR PROCESSES WORK SPACE

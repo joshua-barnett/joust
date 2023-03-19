@@ -12,9 +12,9 @@
 *	FILE: JOUST GAME PROGRAMS
 *
 	NLIST
-	INCLUDE	SHRAMDEF.SRC	DONT FORGET STANDARD DEFINITIONS
-	INCLUDE	SHORTEQU.SRC	CMOS
-	INCLUDE	MESSEQU.SRC	MESSAGES
+	INCLUDE	shramdef.src	dont forget standard definitions
+	INCLUDE	shortequ.src	cmos
+	INCLUDE	messequ.src	messages
 	LIST
 *************************************************************************
 *									*
