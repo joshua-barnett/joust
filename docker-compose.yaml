@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  env:
+    build:
+      args:
+        - BUILDKIT_INLINE_CACHE
+      cache_from:
+        - ${IMAGE}
+    image: ${IMAGE}
+    user: ${DEV_USER}:${DEV_GROUP}
+    working_dir: ${DEV_PATH}

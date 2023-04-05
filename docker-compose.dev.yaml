@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  env:
+    environment:
+      DEV: 1
+    stdin_open: true
+    volumes:
+      - ${PROJECT_PATH}:/${DEV_PATH}
