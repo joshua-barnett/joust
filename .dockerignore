@@ -1,0 +1,5 @@
+# Ignore everything by default
+**
+
+# Explicitly include files in the build context
+asm6809
