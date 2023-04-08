@@ -7,6 +7,10 @@ services:
         - BUILDKIT_INLINE_CACHE
       cache_from:
         - ${IMAGE}
+    environment:
+      DEV: 1
     image: ${IMAGE}
     user: ${DEV_USER}:${DEV_GROUP}
     working_dir: ${DEV_PATH}
+    volumes:
+      - ${PROJECT_PATH}:/${DEV_PATH}
