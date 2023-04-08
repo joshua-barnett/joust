@@ -26,6 +26,7 @@ FROM base AS env
 
 RUN apk add --no-cache \
 curl=7.88.1-r1 \
-make=4.3-r1
+make=4.3-r1 \
+zip=3.0-r10
 
 COPY --from=asm6809 /usr/src/asm6809/src/asm6809 /usr/local/bin/asm6809
