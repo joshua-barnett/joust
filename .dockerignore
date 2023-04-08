@@ -2,4 +2,4 @@
 **
 
 # Explicitly include files in the build context
-asm6809
+!asm6809
