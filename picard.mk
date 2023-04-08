@@ -70,7 +70,7 @@ run \
 scan \
 shell
 
-default: shell
+default: $(if $(CI),rom,shell)
 
 require-%:
 	@#$(or ${$*}, $(error $* is not set))
@@ -125,5 +125,8 @@ down: kill
 
 shell: COMMAND := sh
 shell: command
+
+rom: COMMAND := make --keep-going
+rom: command
 
 endif
