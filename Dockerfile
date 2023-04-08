@@ -25,6 +25,7 @@ RUN ln -s /usr/src/asm6809/src/asm6809 /usr/local/bin/asm6809
 FROM base AS env
 
 RUN apk add --no-cache \
-curl=7.88.1-r1
+curl=7.88.1-r1 \
+make=4.3-r1
 
 COPY --from=asm6809 /usr/src/asm6809/src/asm6809 /usr/local/bin/asm6809
