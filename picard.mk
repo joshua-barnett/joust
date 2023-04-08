@@ -2,7 +2,10 @@
 DEBUG ?=
 
 ifdef DEBUG
-MAKECMDGOALS := debug $(MAKECMDGOALS)
+ifeq ($(MAKECMDGOALS),)
+MAKECMDGOALS += default
+endif
+MAKECMDGOALS += debug
 endif
 MAKEFLAGS += --no-print-directory$(if $(DEBUG), --debug)
 
