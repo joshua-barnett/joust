@@ -43,7 +43,7 @@ LSTS := $(patsubst $(SRC_DIRECTORY)/%.$(SRC_EXTENSION),$(BIN_DIRECTORY)/%.$(LST_
 all: $(OBJS) $(LSTS)
 
 $(BIN_DIRECTORY)/%.$(LST_EXTENSION) $(BIN_DIRECTORY)/%.$(OBJ_EXTENSION): $(SRC_DIRECTORY)/%.$(SRC_EXTENSION)
-	mkdir -p $(@D)
+	@mkdir -p $(@D)
 	-$(ASM6809) $< --output=$@ --listing=$(@:.$(OBJ_EXTENSION)=.$(LST_EXTENSION))
 
 $(JOUST_ROM_DIRECTORY): $(JOUST_ROM_FILES)
