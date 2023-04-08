@@ -79,9 +79,9 @@ required-login-variables: require-DOCKER_REGISTRY_URL
 required-login-variables: require-DOCKER_REGISTRY_USERNAME
 required-login-variables: require-DOCKER_REGISTRY_PASSWORD
 
-login: required-login-variables
+login: $(if $(CI),required-login-variables)
 login:
-	echo $(DOCKER_REGISTRY_PASSWORD) | $(DOCKER) login --password-stdin --username $(DOCKER_REGISTRY_USERNAME) $(DOCKER_REGISTRY_URL)
+	$(if $(CI),,-)@echo $(DOCKER_REGISTRY_PASSWORD) | $(DOCKER) login --password-stdin --username $(DOCKER_REGISTRY_USERNAME) $(DOCKER_REGISTRY_URL)$(if $(CI),, 2> /dev/null)
 
 config:
 	printenv
@@ -89,7 +89,7 @@ config:
 
 debug: config
 
-push: $(if $(CI),login)
+push: login
 	$(DOCKER_COMPOSE) push $(DOCKER_COMPOSE_SERVICE)
 
 required-common-variables: require-IMAGE
@@ -102,8 +102,8 @@ scan:
 
 build: required-build-variables
 build: $(if $(DOCKER_SCAN),scan)
-build: $(if $(CI),login)
-	$(DOCKER_COMPOSE) build --pull $(if $(NO_CACHE),--no-cache )$(DOCKER_COMPOSE_SERVICE)
+build: login
+	@$(DOCKER_COMPOSE) build --pull $(if $(NO_CACHE),--no-cache )$(DOCKER_COMPOSE_SERVICE)
 
 exec:
 	$(DOCKER_COMPOSE) exec $(DOCKER_COMPOSE_SERVICE) $(COMMAND)
