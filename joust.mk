@@ -1,6 +1,6 @@
 JOUST_ROM_URL := https://archive.org/download/ArcadeMachinesChampionCollection2/Champion%20Collection%20-%20Arcade%20%28H-L%29.zip/joust.zip
 JOUST_ZIP_FILE := joust.zip
-JOUST_ROM_DIRECTORY ?= rom
+JOUST_ROM_DIRECTORY ?= roms
 JOUST_ROM_FILES := \
 3006-13.1b \
 3006-14.2b \
@@ -58,7 +58,7 @@ $(JOUST_ROM_FILES):
 	unzip -j -x $(JOUST_ZIP_FILE) -d $(JOUST_ROM_DIRECTORY)
 	rm $(JOUST_ZIP_FILE)
 	cd $(JOUST_ROM_DIRECTORY)
-	sha256sum -c ../rom.sha256sum
+	sha1sum -c ../roms.sha1sum
 
 .PHONY: clean
 clean:
