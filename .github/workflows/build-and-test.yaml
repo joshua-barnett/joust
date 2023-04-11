@@ -12,6 +12,7 @@ jobs:
           submodules: true
       - name: Restore build cache
         id: build-cache-restore
+        continue-on-error: true
         uses: actions/cache/restore@v3
         with:
           path: cache
