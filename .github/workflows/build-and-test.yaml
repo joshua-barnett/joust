@@ -16,7 +16,7 @@ jobs:
         uses: actions/cache/restore@v3
         with:
           path: cache
-          key: ${{ hashFiles('cache/**') }}
+          key: build-cache
       - name: Build
         run: make
       - name: Save build cache
