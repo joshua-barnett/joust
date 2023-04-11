@@ -50,7 +50,7 @@ LSTS := $(patsubst $(SRC_DIRECTORY)/%.$(SRC_EXTENSION),$(BIN_DIRECTORY)/%.$(LST_
 all: $(if $(filter 1,$(shell sha1sum -cs $(CACHE_DIRECTORY)/$(SRC_DIRECTORY).sha1sum ; echo $$?)),$(CACHE_DIRECTORY) $(OBJS) $(LSTS))
 
 $(BIN_DIRECTORY)/%.$(LST_EXTENSION) $(BIN_DIRECTORY)/%.$(OBJ_EXTENSION): $(SRC_DIRECTORY)/%.$(SRC_EXTENSION)
-	@mkdir -p $(@D)
+	mkdir -p $(@D)
 	$(ASM6809) $< --output=$@ --listing=$(@:.$(OBJ_EXTENSION)=.$(LST_EXTENSION)) || true
 
 $(JOUST_ROM_FILES):
