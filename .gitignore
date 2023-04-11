@@ -1,5 +1,7 @@
 bin
 roms
+cache
+
 env.mk
 
 ### macOS ###

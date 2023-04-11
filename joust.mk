@@ -34,6 +34,7 @@ JOUSTY_ZIP := jousty.zip
 JOUST_ZIPS := $(addprefix $(JOUST_ROM_DIRECTORY)/,$(JOUST_ZIP) $(JOUSTY_ZIP) $(JOUSTR_ZIP))
 JOUST_ZIPS := $(JOUST_ZIP) $(JOUSTR_ZIP) $(JOUSTY_ZIP)
 ASM6809 := asm6809
+CACHE_DIRECTORY := cache
 BIN_DIRECTORY := bin
 SRC_DIRECTORY := src
 SRC_EXTENSION := SRC
@@ -45,11 +46,12 @@ LSTS := $(patsubst $(SRC_DIRECTORY)/%.$(SRC_EXTENSION),$(BIN_DIRECTORY)/%.$(LST_
 
 .ONESHELL:
 
-all: $(OBJS) $(LSTS)
+.PHONY: all
+all: $(if $(filter 1,$(shell sha1sum -cs $(CACHE_DIRECTORY)/$(SRC_DIRECTORY).sha1sum ; echo $$?)),$(CACHE_DIRECTORY) $(OBJS) $(LSTS))
 
 $(BIN_DIRECTORY)/%.$(LST_EXTENSION) $(BIN_DIRECTORY)/%.$(OBJ_EXTENSION): $(SRC_DIRECTORY)/%.$(SRC_EXTENSION)
 	@mkdir -p $(@D)
-	-$(ASM6809) $< --output=$@ --listing=$(@:.$(OBJ_EXTENSION)=.$(LST_EXTENSION))
+	$(ASM6809) $< --output=$@ --listing=$(@:.$(OBJ_EXTENSION)=.$(LST_EXTENSION)) || true
 
 $(JOUST_ROM_FILES):
 	curl \
@@ -60,13 +62,12 @@ $(JOUST_ROM_FILES):
 	$(JOUST_ROM_URL)
 	unzip -j -x $(JOUST_ZIP_FILE) -d $(JOUST_ROM_DIRECTORY)
 	rm $(JOUST_ZIP_FILE)
-	cd $(JOUST_ROM_DIRECTORY)
-	sha1sum -c ../roms.sha1sum
+	sha1sum -c roms.sha1sum
 
 $(JOUST_ZIP): $(JOUST_ROM_FILES)
-	cd $(JOUST_ROM_DIRECTORY)
 	zip \
-	$(JOUST_ZIP) \
+	$(JOUST_ROM_DIRECTORY)/$(JOUST_ZIP) \
+	$(addprefix $(JOUST_ROM_DIRECTORY)/,\
 	3006-22.10b \
 	3006-23.11b \
 	3006-24.12b \
@@ -81,12 +82,12 @@ $(JOUST_ZIP): $(JOUST_ROM_FILES)
 	3006-21.9b \
 	joust.snd \
 	decoder.4 \
-	decoder.6
+	decoder.6)
 
 $(JOUSTY_ZIP): $(JOUST_ROM_FILES)
-	cd $(JOUST_ROM_DIRECTORY)
 	zip \
-	$(JOUSTY_ZIP) \
+	$(JOUST_ROM_DIRECTORY)/$(JOUSTY_ZIP) \
+	$(addprefix $(JOUST_ROM_DIRECTORY)/,\
 	joust.wra \
 	3006-23.11b \
 	3006-24.12b \
@@ -101,12 +102,12 @@ $(JOUSTY_ZIP): $(JOUST_ROM_FILES)
 	3006-21.9b \
 	joust.snd \
 	decoder.4 \
-	decoder.6
+	decoder.6)
 
 $(JOUSTR_ZIP): $(JOUST_ROM_FILES)
-	cd $(JOUST_ROM_DIRECTORY)
 	zip \
-	$(JOUSTR_ZIP) \
+	$(JOUST_ROM_DIRECTORY)/$(JOUSTR_ZIP) \
+	$(addprefix $(JOUST_ROM_DIRECTORY)/,\
 	joust.sra \
 	joust.srb \
 	joust.src \
@@ -121,10 +122,25 @@ $(JOUSTR_ZIP): $(JOUST_ROM_FILES)
 	joust.sr9 \
 	joust.snd \
 	decoder.4 \
-	decoder.6
+	decoder.6)
 
 $(JOUST_ROM_DIRECTORY): $(JOUST_ZIPS)
 
+.PHONY: clean-%
+clean-%:
+	rm -rf $*
+
+$(JOUST_ROM_DIRECTORY).sha1sum: $(JOUST_ROM_FILES)
+$(JOUST_ROM_DIRECTORY).sha1sum: clean-$(JOUST_ROM_DIRECTORY).sha1sum
+	sha1sum $(addprefix $(JOUST_ROM_DIRECTORY)/,3006-*.?b decoder.* joust.s* joust.w*) > $(JOUST_ROM_DIRECTORY).sha1sum
+
+$(CACHE_DIRECTORY)/$(SRC_DIRECTORY).sha1sum: clean-$(CACHE_DIRECTORY)
+	mkdir -p cache
+	sha1sum $(addprefix $(SRC_DIRECTORY)/,*) > $(CACHE_DIRECTORY)/$(SRC_DIRECTORY).sha1sum
+
+$(CACHE_DIRECTORY): $(CACHE_DIRECTORY)/$(SRC_DIRECTORY).sha1sum
+
 .PHONY: clean
-clean:
-	rm -r $(JOUST_ROM_DIRECTORY) $(BIN_DIRECTORY)
+clean: clean-$(BIN_DIRECTORY)
+clean: clean-$(CACHE_DIRECTORY)
+clean: clean-$(JOUST_ROM_DIRECTORY)
