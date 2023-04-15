@@ -28,11 +28,15 @@ joust.src \
 joust.wr7 \
 joust.wra
 JOUST_ROM_FILES := $(addprefix $(JOUST_ROM_DIRECTORY)/,$(JOUST_ROM_FILES))
-JOUST_ZIP := joust.zip
-JOUSTR_ZIP := joustr.zip
-JOUSTY_ZIP := jousty.zip
-JOUST_ZIPS := $(addprefix $(JOUST_ROM_DIRECTORY)/,$(JOUST_ZIP) $(JOUSTY_ZIP) $(JOUSTR_ZIP))
-JOUST_ZIPS := $(JOUST_ZIP) $(JOUSTR_ZIP) $(JOUSTY_ZIP)
+ZIP_EXTENSION := zip
+BIN_EXTENSION := bin
+JOUST := joust
+JOUSTR := joustr
+JOUSTY := jousty
+JOUST_VERSIONS := $(JOUST) $(JOUSTR) $(JOUSTY)
+JOUST_PATHS := $(addprefix $(JOUST_ROM_DIRECTORY)/,$(JOUST_VERSIONS))
+JOUST_ZIPS := $(addsuffix .$(ZIP_EXTENSION),$(JOUST_PATHS))
+JOUST_BINS := $(addsuffix .$(BIN_EXTENSION),$(JOUST_PATHS))
 ASM6809 := asm6809
 CACHE_DIRECTORY := cache
 BIN_DIRECTORY := bin
@@ -64,9 +68,9 @@ $(JOUST_ROM_FILES):
 	rm $(JOUST_ZIP_FILE)
 	sha1sum -c roms.sha1sum
 
-$(JOUST_ZIP): $(JOUST_ROM_FILES)
+$(JOUST_ROM_DIRECTORY)/$(JOUST).$(ZIP_EXTENSION): $(JOUST_ROM_FILES)
 	zip \
-	$(JOUST_ROM_DIRECTORY)/$(JOUST_ZIP) \
+	$@ \
 	$(addprefix $(JOUST_ROM_DIRECTORY)/,\
 	3006-22.10b \
 	3006-23.11b \
@@ -84,9 +88,28 @@ $(JOUST_ZIP): $(JOUST_ROM_FILES)
 	decoder.4 \
 	decoder.6)
 
-$(JOUSTY_ZIP): $(JOUST_ROM_FILES)
+$(JOUST_ROM_DIRECTORY)/$(JOUST).$(BIN_EXTENSION): $(JOUST_ROM_FILES)
+	cat \
+	$(addprefix $(JOUST_ROM_DIRECTORY)/,\
+	3006-22.10b \
+	3006-23.11b \
+	3006-24.12b \
+	3006-13.1b \
+	3006-14.2b \
+	3006-15.3b \
+	3006-16.4b \
+	3006-17.5b \
+	3006-18.6b \
+	3006-19.7b \
+	3006-20.8b \
+	3006-21.9b \
+	joust.snd \
+	decoder.4 \
+	decoder.6) > $@
+
+$(JOUST_ROM_DIRECTORY)/$(JOUSTY).$(ZIP_EXTENSION): $(JOUST_ROM_FILES)
 	zip \
-	$(JOUST_ROM_DIRECTORY)/$(JOUSTY_ZIP) \
+	$@ \
 	$(addprefix $(JOUST_ROM_DIRECTORY)/,\
 	joust.wra \
 	3006-23.11b \
@@ -104,9 +127,28 @@ $(JOUSTY_ZIP): $(JOUST_ROM_FILES)
 	decoder.4 \
 	decoder.6)
 
-$(JOUSTR_ZIP): $(JOUST_ROM_FILES)
+$(JOUST_ROM_DIRECTORY)/$(JOUSTY).$(BIN_EXTENSION): $(JOUST_ROM_FILES)
+	cat \
+	$(addprefix $(JOUST_ROM_DIRECTORY)/,\
+	joust.wra \
+	3006-23.11b \
+	3006-24.12b \
+	3006-13.1b \
+	3006-14.2b \
+	3006-15.3b \
+	3006-16.4b \
+	3006-17.5b \
+	3006-18.6b \
+	joust.wr7 \
+	3006-20.8b \
+	3006-21.9b \
+	joust.snd \
+	decoder.4 \
+	decoder.6) > $@
+
+$(JOUST_ROM_DIRECTORY)/$(JOUSTR).$(ZIP_EXTENSION): $(JOUST_ROM_FILES)
 	zip \
-	$(JOUST_ROM_DIRECTORY)/$(JOUSTR_ZIP) \
+	$@ \
 	$(addprefix $(JOUST_ROM_DIRECTORY)/,\
 	joust.sra \
 	joust.srb \
@@ -124,7 +166,26 @@ $(JOUSTR_ZIP): $(JOUST_ROM_FILES)
 	decoder.4 \
 	decoder.6)
 
-$(JOUST_ROM_DIRECTORY): $(JOUST_ZIPS)
+$(JOUST_ROM_DIRECTORY)/$(JOUSTR).$(BIN_EXTENSION): $(JOUST_ROM_FILES)
+	cat \
+	$(addprefix $(JOUST_ROM_DIRECTORY)/,\
+	joust.sra \
+	joust.srb \
+	joust.src \
+	3006-13.1b \
+	3006-14.2b \
+	3006-15.3b \
+	joust.sr4 \
+	3006-17.5b \
+	joust.sr6 \
+	joust.sr7 \
+	joust.sr8 \
+	joust.sr9 \
+	joust.snd \
+	decoder.4 \
+	decoder.6) > $@
+
+$(JOUST_ROM_DIRECTORY): $(JOUST_ZIPS) $(JOUST_BINS)
 
 .PHONY: clean-%
 clean-%:
