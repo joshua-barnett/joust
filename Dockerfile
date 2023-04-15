@@ -6,7 +6,7 @@ RUN apk add --no-cache \
 autoconf=2.71-r1 \
 automake=1.16.5-r1 \
 byacc=20221106-r0 \
-curl=7.88.1-r1 \
+curl=8.0.1-r0 \
 flex=2.6.4-r3 \
 gcc=12.2.1_git20220924-r4 \
 make=4.3-r1 \
@@ -25,7 +25,7 @@ RUN ln -s /usr/src/asm6809/src/asm6809 /usr/local/bin/asm6809
 FROM base AS env
 
 RUN apk add --no-cache \
-curl=7.88.1-r1 \
+curl=8.0.1-r0 \
 make=4.3-r1 \
 zip=3.0-r10
 
