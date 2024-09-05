@@ -3,3 +3,4 @@
 
 # Explicitly include files in the build context
 !asm6809
+!asl
