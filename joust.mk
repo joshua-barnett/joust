@@ -51,7 +51,7 @@ LSTS := $(patsubst $(SRC_DIRECTORY)/%.$(SRC_EXTENSION),$(BIN_DIRECTORY)/%.$(LST_
 .ONESHELL:
 
 .PHONY: all
-all: $(if $(filter 1,$(shell sha1sum -cs $(CACHE_DIRECTORY)/$(SRC_DIRECTORY).sha1sum ; echo $$?)),$(CACHE_DIRECTORY) $(OBJS) $(LSTS))
+all: $(if $(filter 1,$(shell sha1sum -cs $(CACHE_DIRECTORY)/$(notdir $(SRC_DIRECTORY)).sha1sum ; echo $$?)),$(CACHE_DIRECTORY) $(OBJS) $(LSTS))
 
 $(BIN_DIRECTORY)/%.$(LST_EXTENSION) $(BIN_DIRECTORY)/%.$(OBJ_EXTENSION): $(SRC_DIRECTORY)/%.$(SRC_EXTENSION)
 	mkdir -p $(@D)
@@ -195,11 +195,11 @@ $(JOUST_ROM_DIRECTORY).sha1sum: $(JOUST_ROM_FILES)
 $(JOUST_ROM_DIRECTORY).sha1sum: clean-$(JOUST_ROM_DIRECTORY).sha1sum
 	sha1sum $(addprefix $(JOUST_ROM_DIRECTORY)/,3006-*.?b decoder.* joust.s* joust.w*) > $(JOUST_ROM_DIRECTORY).sha1sum
 
-$(CACHE_DIRECTORY)/$(SRC_DIRECTORY).sha1sum: clean-$(CACHE_DIRECTORY)
+$(CACHE_DIRECTORY)/$(notdir $(SRC_DIRECTORY)).sha1sum: clean-$(CACHE_DIRECTORY)
 	mkdir -p cache
 	sha1sum $(addprefix $(SRC_DIRECTORY)/,*) > $(CACHE_DIRECTORY)/$(notdir $(SRC_DIRECTORY)).sha1sum
 
-$(CACHE_DIRECTORY): $(CACHE_DIRECTORY)/$(SRC_DIRECTORY).sha1sum
+$(CACHE_DIRECTORY): $(CACHE_DIRECTORY)/$(notdir $(SRC_DIRECTORY)).sha1sum
 
 .PHONY: clean
 clean: clean-$(BIN_DIRECTORY)
