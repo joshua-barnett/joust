@@ -40,7 +40,7 @@ JOUST_BINS := $(addsuffix .$(BIN_EXTENSION),$(JOUST_PATHS))
 ASM6809 := asm6809
 CACHE_DIRECTORY := cache
 BIN_DIRECTORY := bin
-SRC_DIRECTORY := src
+SRC_DIRECTORY := src/original
 SRC_EXTENSION := SRC
 OBJ_EXTENSION := O
 LST_EXTENSION := LST
@@ -197,7 +197,7 @@ $(JOUST_ROM_DIRECTORY).sha1sum: clean-$(JOUST_ROM_DIRECTORY).sha1sum
 
 $(CACHE_DIRECTORY)/$(SRC_DIRECTORY).sha1sum: clean-$(CACHE_DIRECTORY)
 	mkdir -p cache
-	sha1sum $(addprefix $(SRC_DIRECTORY)/,*) > $(CACHE_DIRECTORY)/$(SRC_DIRECTORY).sha1sum
+	sha1sum $(addprefix $(SRC_DIRECTORY)/,*) > $(CACHE_DIRECTORY)/$(notdir $(SRC_DIRECTORY)).sha1sum
 
 $(CACHE_DIRECTORY): $(CACHE_DIRECTORY)/$(SRC_DIRECTORY).sha1sum
 
