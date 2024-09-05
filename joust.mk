@@ -53,6 +53,21 @@ LSTS := $(patsubst $(SRC_DIRECTORY)/%.$(SRC_EXTENSION),$(BIN_DIRECTORY)/%.$(LST_
 .PHONY: all
 all: $(if $(filter 1,$(shell sha1sum -cs $(CACHE_DIRECTORY)/$(notdir $(SRC_DIRECTORY)).sha1sum ; echo $$?)),$(CACHE_DIRECTORY) $(OBJS) $(LSTS))
 
+rewrite:
+	asl src/rewrite/make.ASM -o bin/joust.p
+	p2bin bin/joust.p bin/joust_rom_1b_3006-13.e4 -l 00 -r 0x0000-0x0FFF
+	p2bin bin/joust.p bin/joust_rom_2b_3006-14.c4 -l 00 -r 0x1000-0x1FFF
+	p2bin bin/joust.p bin/joust_rom_3b_3006-15.a4 -l 00 -r 0x2000-0x2FFF
+	p2bin bin/joust.p bin/joust_rom_4b_3006-16.e5 -l 00 -r 0x3000-0x3FFF
+	p2bin bin/joust.p bin/joust_rom_5b_3006-17.c5 -l 00 -r 0x4000-0x4FFF
+	p2bin bin/joust.p bin/joust_rom_6b_3006-18.a5 -l 00 -r 0x5000-0x5FFF
+	p2bin bin/joust.p bin/joust_rom_7b_3006-19.e6 -l 00 -r 0x6000-0x6FFF
+	p2bin bin/joust.p bin/joust_rom_8b_3006-20.c6 -l 00 -r 0x7000-0x7FFF
+	p2bin bin/joust.p bin/joust_rom_9b_3006-21.a6 -l 00 -r 0x8000-0x8FFF
+	p2bin bin/joust.p bin/joust_rom_10b_3006-22.a7 -l 00 -r 0xD000-0xDFFF
+	p2bin bin/joust.p bin/joust_rom_11b_3006-23.c7 -l 00 -r 0xE000-0xEFFF
+	p2bin bin/joust.p bin/joust_rom_12b_3006-24.e7 -l 00 -r 0xF000-0xFFFF
+
 $(BIN_DIRECTORY)/%.$(LST_EXTENSION) $(BIN_DIRECTORY)/%.$(OBJ_EXTENSION): $(SRC_DIRECTORY)/%.$(SRC_EXTENSION)
 	mkdir -p $(@D)
 	$(ASM6809) $< --output=$@ --listing=$(@:.$(OBJ_EXTENSION)=.$(LST_EXTENSION)) || true
