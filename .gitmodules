@@ -3,4 +3,4 @@
 	url = git@github.com:jshbrntt/asm6809.git
 [submodule "src/rewrite"]
 	path = src/rewrite
-	url = git@github.com:synamaxmusic/joust.git
+	url = git@github.com:jshbrntt/joust-rewrite.git
