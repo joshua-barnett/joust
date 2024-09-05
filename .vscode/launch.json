@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug: asm6809",
+            "program": "${workspaceFolder}/asm6809/src/asm6809",
+            "args": [
+                // "--help",
+                "src/ATT.SRC",
+                "--output=bin/ATT.O",
+                "--listing=bin/ATT.LST"
+            ],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
