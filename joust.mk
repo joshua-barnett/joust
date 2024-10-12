@@ -101,7 +101,7 @@ pos = $(words $(call _pos,$1,$2))
 build:
 	rm -rf bin
 	mkdir -p bin
-	asl src/rewrite/make.ASM -o bin/joust.p
+	asl src/rewrite/make.ASM -L -olist bin/joust.lst -o bin/joust.p
 	rm -rf roms
 	mkdir -p roms
 	p2bin bin/joust.p roms/joust_rom_1b_3006-13.e4 -l 00 -r 0x0000-0x0FFF
@@ -116,9 +116,9 @@ build:
 	p2bin bin/joust.p roms/joust_rom_10b_3006-22.a7 -l 00 -r 0xD000-0xDFFF
 	p2bin bin/joust.p roms/joust_rom_11b_3006-23.c7 -l 00 -r 0xE000-0xEFFF
 	p2bin bin/joust.p roms/joust_rom_12b_3006-24.e7 -l 00 -r 0xF000-0xFFFF
-	asl src/rewrite/VSNDRM4.ASM -o bin/vsndrm4.p
+	asl src/rewrite/VSNDRM4.ASM -L -olist bin/vsndrm4.lst -o bin/vsndrm4.p
 	p2bin bin/vsndrm4.p roms/video_sound_rom_4_std_780.ic12 -l 00 -r 0xF000-0xFFFF
-	asl src/rewrite/decoder_roms.asm -o bin/decoder.p
+	asl src/rewrite/decoder_roms.asm -L -olist bin/decoder.lst -o bin/decoder.p
 	p2bin bin/decoder.p roms/decoder_rom_4.3g -r 0x0000-0x01FF
 	p2bin bin/decoder.p roms/decoder_rom_6.3c -r 0x0200-0x03FF
 	zip roms/joust.zip roms/*
