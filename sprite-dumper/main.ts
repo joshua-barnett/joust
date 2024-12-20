@@ -82,6 +82,9 @@ function parseLiteral(literal: string, sectors: Map<Label, Sector>): number | st
     if (literal.startsWith('$')) {
       value = Number.parseInt(literal.slice(1), 16);
     }
+    if (literal.startsWith('%')) {
+      value = Number.parseInt(literal.slice(1), 2);
+    }
   }
   const sector = sectors.get(literal);
   if (sector) {
@@ -142,15 +145,30 @@ function parseSector(sector: Sector, sectors: Map<Label, Sector>) {
   return sector.block;
 }
 
-function decimalToSegments(decimal: number, bits: number = 8): number[] {
+function decimalToSegments(decimal: number, bits: number = 8, width: number = 2): number[] {
   const segments = [];
   const size = (1 << bits) - 1;
   let value = decimal;
-  while (value > 0) {
+  for (let i = 0; i < width; i++) {
     segments.push(value & size);
     value = value >> bits;
   }
-  return segments;
+  return segments.reverse();
+}
+
+function extractSprite(sector: Sector, size: number = 2) {
+  if (sector.lines[sector.lines.length - 1].endsWith('!DMAFIX')) {
+    const [dimensions] = sector.block.slice(-1);
+    const [width, height] = decimalToSegments(dimensions, 8);
+    const [bitmap] = sector.block.filter(Array.isArray).slice(-1);
+    // @ts-ignore
+    const colors = bitmap.map((value) => decimalToSegments(value, 4, size)).flat();
+    return {
+      colors,
+      width,
+      height,
+    };
+  }
 }
 
 async function loadFile() {
@@ -174,6 +192,7 @@ async function loadFile() {
         start: index,
         end: lines.length - 1,
         lines: [],
+        block: null,
       };
       sectors.set(first, sector);
       if (lastLabel) {
@@ -207,32 +226,49 @@ async function loadFile() {
   }
 
   // _CLIF1L
-  const sector = sectors.get('_CLIF1L');
-  const parts = sector.block.slice(1);
-  debugger
-
-  // for (const [label, sector] of sectors.entries().filter(([label]) => label.startsWith('_'))) {
+  // const sector = sectors.get('_CLIF3L');
+  // if (sector) {
   //   // @ts-ignore
-  //   if (sector.lines[sector.lines.length - 1].endsWith('!DMAFIX')) {
-  //     const last = sector.block.pop();
-  //     const [height, width] = decimalToSegments(last, 8);
-  //     let x, y;
-  //     let next = sector.block.pop();
-  //     if (!Array.isArray(next)) {
-  //       // @ts-ignore
-  //       ([y, x] = decimalToSegments(next, 8));
-  //       next = sector.block.pop();
-  //     }
-  //     // @ts-ignore
-  //     const colors = next.map((value) => decimalToSegments(value, 4)).flat();
-  //     renderPNG(colors, width * 2, height, `./${label}.png`);
-  //   }
-  //   // if (Array.isArray(sector.block) && sector.block.every((value) => Number.isInteger(value))) {
-  //   //   const [size] = sector.block;
-  //   //   const segments = decimalTo16BitSegments(size);
-  //   //   console.log(label, sector.block);
-  //   // }
+  //   const { colors, width, height } = extractSprite(sector);
+  //   console.log(colors, width, height);
   // }
+
+  const sector = sectors.get('_COMCL5');
+  if (sector) {
+    const size = 2;
+    // @ts-ignore
+    const colors = sector.block.map((value) => decimalToSegments(value, 3, size)).flat();
+    const width = 60;
+    const height = 33;
+    renderPNG(colors, width * 2, height, `./_COMCL5.png`);
+  }
+
+  const sector = sectors.get('_CLIF5');
+  if (sector) {
+    // @ts-ignore
+    const parts = {
+      CSRC5: sector.block.slice(4, 7),
+      CSRC5L: sector.block.slice(7, 10),
+      CSRC5R: sector.block.slice(10, 13),
+    };
+    for (const [label, block] of Object.entries(parts)) {
+      const [bitmap, position, dimensions] = block;
+      // @ts-ignore
+      const colors = bitmap.map((value) => decimalToSegments(value, 4, 2)).flat();
+      const [width, height] = decimalToSegments(dimensions, 8);
+      renderPNG(colors, width * 2, height, `./${label}.png`);
+    }
+  }
+
+  for (const [label, sector] of sectors.entries().filter(([label]) => label.startsWith('_'))) {
+    // @ts-ignore
+    if (sector.lines[sector.lines.length - 1].endsWith('!DMAFIX')) {
+      // @ts-ignore
+      const { colors, width, height } = extractSprite(sector, ['_CLIF1R', '_CLIF3R', '_TRANS1', '_TRANS2', '_TRANS3', '_TRANS4'].includes(label) ? 4 : 2);
+      renderPNG(colors, width * 2, height, `./${label}.png`);
+    }
+  }
+
 }
 
 loadFile();
